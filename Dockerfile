@@ -1,6 +1,22 @@
-FROM docker:19.03.0-dind
+FROM alpine:3
 
-RUN apk update && apk add curl git
+# variable "VERSION" must be passed as docker environment variables during the image build
+# docker build --no-cache --build-arg VERSION=1.19.2 -t denyo/alpine-kubectl:1.19.2 .
 
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.1/bin/linux/amd64/kubectl
-RUN chmod u+x kubectl && mv kubectl /bin/kubectl
+ARG VERSION
+
+ENV BASE_URL="https://dl.k8s.io"
+ENV TAR_FILE="v${VERSION}/kubernetes-client-linux-amd64.tar.gz"
+
+RUN apk add --update --no-cache curl ca-certificates && \
+    curl -L ${BASE_URL}/${TAR_FILE} |tar xvz && \
+    mv kubernetes/client/bin/kubectl /usr/bin/kubectl && \
+    chmod +x /usr/bin/kubectl && \
+    rm -rf kubernetes && \
+    apk del curl && \
+    rm -f /var/cache/apk/*
+
+WORKDIR /apps
+
+ENTRYPOINT ["kubectl"]
+CMD ["--help"]

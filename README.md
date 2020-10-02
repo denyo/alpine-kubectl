@@ -1,3 +1,7 @@
-# Docker - Kubectl
+# alpine kubectl
 
-Kubectl installed in an alpine based image from docker. Used for container building and k8s deployments in CI/CD.
+Inspired by <https://github.com/alpine-docker/helm>
+
+```
+docker build --build-arg VERSION=1.19.2 -t denyo/alpine-kubectl:1.19.2 .
+```
