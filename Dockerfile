@@ -8,7 +8,7 @@ ARG VERSION
 ENV BASE_URL="https://dl.k8s.io"
 ENV TAR_FILE="v${VERSION}/kubernetes-client-linux-amd64.tar.gz"
 
-RUN apk add --update --no-cache curl ca-certificates && \
+RUN apk add --update --no-cache curl ca-certificates bash && \
     curl -L ${BASE_URL}/${TAR_FILE} |tar xvz && \
     mv kubernetes/client/bin/kubectl /usr/bin/kubectl && \
     chmod +x /usr/bin/kubectl && \
